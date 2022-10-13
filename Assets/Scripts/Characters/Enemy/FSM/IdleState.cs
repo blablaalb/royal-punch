@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PER.Common.FSM;
 using UnityEngine;
 using System;
+using Characters.Player.FSM;
 
 namespace Characters.Enemy.FSM
 {
@@ -14,13 +15,17 @@ namespace Characters.Enemy.FSM
         [SerializeField]
         private FloatRange _waitRange;
         private Coroutine _waitCoroutineHandler;
+        [SerializeField]
+        private float _closePunchDistance;
+        private PlayerBrain _player;
 
-        public string StateName => "Idle Punch";
+        public string StateName => "Idle";
 
-        public void Initialize(EnemyAnimations animations, EnemyBrain context)
+        public void Initialize(EnemyAnimations animations, EnemyBrain context, PlayerBrain player)
         {
             _animations = animations;
             _context = context;
+            _player = player;
         }
 
         public void Enter()
@@ -32,6 +37,7 @@ namespace Characters.Enemy.FSM
 
         public void Exit()
         {
+            if (_waitCoroutineHandler != null) _context.StopCoroutine(_waitCoroutineHandler);
         }
 
         public void OnFixedUpdate()
@@ -40,6 +46,11 @@ namespace Characters.Enemy.FSM
 
         public void OnUpdate()
         {
+            var distance = Vector3.Distance(_context.transform.position, _player.transform.position);
+            if (distance <= _closePunchDistance)
+            {
+                _context.ClosePunch();
+            }
         }
 
         private IEnumerator WaitCorotuine()
@@ -47,6 +58,7 @@ namespace Characters.Enemy.FSM
             var wait = UnityEngine.Random.Range(_waitRange.Min, _waitRange.Max);
             yield return new WaitForSeconds(wait);
             _context.JumpPunch1();
+            _waitCoroutineHandler = null;
         }
 
     }

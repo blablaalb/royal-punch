@@ -22,6 +22,11 @@ namespace Characters.Enemy
             _animator.CrossFade("Armature|BossSuper5", 0.1f);
         }
 
+        public void ClosePunch()
+        {
+            _animator.CrossFade("Armature|BossPunch", 0.1f);
+        }
+
         public void Rest()
         {
             _animator.CrossFade("Armature|BossTired", 0.2f);
@@ -47,7 +52,8 @@ namespace Characters.Enemy
             JumpPunch1Finihed?.Invoke();
         }
 
-        public void OnJumpPunch1Landed(){
+        public void OnJumpPunch1Landed()
+        {
             JumpPunch1Landed?.Invoke();
         }
     }

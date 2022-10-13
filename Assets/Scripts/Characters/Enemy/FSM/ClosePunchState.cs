@@ -27,6 +27,7 @@ namespace Characters.Enemy.FSM
 
         public void Enter()
         {
+            _animations.ClosePunch();
         }
 
         public void Exit()
@@ -39,6 +40,12 @@ namespace Characters.Enemy.FSM
 
         public void OnUpdate()
         {
+            var distance = Vector3.Distance(_context.transform.position, _player.transform.position);
+
+            if (distance > _maxDistance)
+            {
+                _context.Idle();
+            }
         }
 
 

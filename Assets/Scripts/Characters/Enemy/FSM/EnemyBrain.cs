@@ -22,6 +22,8 @@ namespace Characters.Enemy.FSM
         private RestState _restState;
         [SerializeField]
         private IdleState _idleState;
+        [SerializeField]
+        private ClosePunchState _closePunchState;
 
 
         public int Health => _health;
@@ -37,7 +39,8 @@ namespace Characters.Enemy.FSM
             _lookAt = GetComponent<SmoothLookAt>();
             _jumpPunchState.Initialize(_animations, this, _fieldOfAttack, _player);
             _restState.Initialize(_animations, this);
-            _idleState.Initialize(_animations, this);
+            _idleState.Initialize(_animations, this, _player);
+            _closePunchState.Initialize(_animations, this, _player);
         }
 
         internal void Start()
@@ -55,12 +58,18 @@ namespace Characters.Enemy.FSM
             {
                 _lookAt.Target = _player.transform;
             }
+            base.Update();
         }
 
 
         public void JumpPunch1()
         {
             EnterState(_jumpPunchState);
+        }
+
+        public void ClosePunch()
+        {
+            EnterState(_closePunchState);
         }
 
         public void Rest()

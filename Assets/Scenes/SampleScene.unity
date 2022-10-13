@@ -2402,6 +2402,9 @@ MonoBehaviour:
     _waitRange:
       Min: 1
       Max: 5
+    _closePunchDistance: 3
+  _closePunchState:
+    _maxDistance: 3
 --- !u!114 &2099133817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3061,6 +3064,22 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8776724214449999679, guid: 8c15e4127389e8445a7e9d82affe8836, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8776724214782147265, guid: 8c15e4127389e8445a7e9d82affe8836, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -0.3611
+      objectReference: {fileID: 0}
+    - target: {fileID: 8776724214782147265, guid: 8c15e4127389e8445a7e9d82affe8836, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -0.2889
+      objectReference: {fileID: 0}
+    - target: {fileID: 8776724214782147265, guid: 8c15e4127389e8445a7e9d82affe8836, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000025749207
+      objectReference: {fileID: 0}
+    - target: {fileID: 8776724214782147265, guid: 8c15e4127389e8445a7e9d82affe8836, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8776724214800171537, guid: 8c15e4127389e8445a7e9d82affe8836, type: 3}
