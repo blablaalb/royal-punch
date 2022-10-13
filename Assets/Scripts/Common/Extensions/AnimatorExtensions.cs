@@ -10,6 +10,7 @@ static class AnimatorExtensions
         }
     }
 
+
     public static bool IsPlaying(this Animator animator, string stateName, int layer = 0)
     {
         var info = animator.GetCurrentAnimatorStateInfo(layer);

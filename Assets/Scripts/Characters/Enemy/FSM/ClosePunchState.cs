@@ -27,7 +27,6 @@ namespace Characters.Enemy.FSM
 
         public void Enter()
         {
-            _animations.ClosePunch();
         }
 
         public void Exit()
@@ -46,6 +45,8 @@ namespace Characters.Enemy.FSM
             {
                 _context.Idle();
             }
+            else
+                _animations.ClosePunch();
         }
 
 

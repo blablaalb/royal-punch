@@ -4,6 +4,9 @@ using PER.Common.FSM;
 using UnityEngine;
 using System;
 using Characters.Player.FSM;
+#if UNITY_EDITOR
+using NaughtyAttributes;
+#endif
 
 namespace Characters.Enemy.FSM
 {
@@ -89,7 +92,16 @@ namespace Characters.Enemy.FSM
             var delta = health - _health;
             _health = health;
             HealthChanged?.Invoke(delta);
+            _animations.Punched();
         }
+
+#if UNITY_EDITOR
+        [Button]
+        public void PrintEnemyState()
+        {
+            Debug.Log($"Enemy: Current State is: {_currentState.StateName}");
+        }
+#endif
 
     }
 }

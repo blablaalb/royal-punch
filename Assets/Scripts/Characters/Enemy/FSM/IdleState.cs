@@ -49,7 +49,9 @@ namespace Characters.Enemy.FSM
             var distance = Vector3.Distance(_context.transform.position, _player.transform.position);
             if (distance <= _closePunchDistance)
             {
-                _context.ClosePunch();
+                var angle = Vector3.Angle(_context.transform.forward, _player.transform.position - _context.transform.position);
+                if (angle <= 45f)
+                    _context.ClosePunch();
             }
         }
 

@@ -24,7 +24,12 @@ namespace Characters.Enemy
 
         public void ClosePunch()
         {
-            _animator.CrossFade("Armature|BossPunch", 0.1f);
+            var animation = "Armature|GGPunch";
+            if (!_animator.IsPlaying(animation, 0))
+            {
+                _animator.Play(animation, 0, 0f);
+                Debug.Log("punch");
+            }
         }
 
         public void Rest()
@@ -42,6 +47,12 @@ namespace Characters.Enemy
             _animator.CrossFade("Armature|Idle2", 0.1f);
         }
 
+        public void Punched()
+        {
+            _animator.SetLayerWeight(1, 1f);
+            _animator.Play("Punched",  1, 0f);
+        }
+
         public void Round()
         {
             _animator.CrossFade("Armature|Round", 0.1f);
@@ -55,6 +66,11 @@ namespace Characters.Enemy
         public void OnJumpPunch1Landed()
         {
             JumpPunch1Landed?.Invoke();
+        }
+
+        public void OnPunchedFinished()
+        {
+            _animator.SetLayerWeight(1, 0f);
         }
     }
 }
