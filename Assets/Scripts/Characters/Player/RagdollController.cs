@@ -87,19 +87,32 @@ namespace Characters.Player
                         rb.isKinematic = true;
                 }
 
-                tweens.Add(z.ragdollChild.DOMove(z.modelChild.position, 2.2f));
-                tweens.Add(z.ragdollChild.DORotate(z.modelChild.rotation.eulerAngles, 1.2f));
+                tweens.Add(z.ragdollChild.DOMove(z.modelChild.position, 1.2f));
+                tweens.Add(z.ragdollChild.DORotate(z.modelChild.rotation.eulerAngles, .8f));
             }
 
-            tweens.Last().OnComplete(() =>
+            StartCoroutine(WaitForTweensComlpetion(tweens, () =>
             {
                 _ragdoll.SetActive(false);
                 _model.SetActive(true);
                 _animator.enabled = true;
                 _callback?.Invoke();
                 _callback = null;
-            });
+            }));
+        }
 
+        private IEnumerator WaitForTweensComlpetion(List<Tween> tweens, Action action)
+        {
+            var run = true;
+            while (run)
+            {
+                if (tweens.All(tween => tween.IsComplete() || !tween.IsPlaying()))
+                {
+                    run = false;
+                    action?.Invoke();
+                }
+                yield return new WaitForEndOfFrame();
+            }
         }
 
         private IEnumerator CountdownCoroutine()
