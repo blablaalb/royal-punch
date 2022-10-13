@@ -13,7 +13,6 @@ namespace Characters.Player.FSM
     {
         [SerializeField]
         private int _maxHealth;
-        [SerializeField]
         private int _health;
         [SerializeField]
         private KnockdownState _knockdownState;
@@ -22,6 +21,7 @@ namespace Characters.Player.FSM
         [SerializeField]
         private IdleState _idleState;
         private PlayerAnimations _animations;
+        private RagdollController _ragdollController;
         private CharacterController _characterController;
         private PunchAction _punchAction;
         [SerializeField]
@@ -34,15 +34,18 @@ namespace Characters.Player.FSM
             _punchAction = GetComponent<PunchAction>();
             _animations = GetComponent<PlayerAnimations>();
             _characterController = GetComponent<CharacterController>();
+            _ragdollController = GetComponent<RagdollController>();
             _runState.Initialize(animations: _animations, characterController: _characterController, context: this);
             _idleState.Initialize(animations: _animations, characterController: _characterController, context: this);
-            _knockdownState.Initialize(animations: _animations, this);
+            _knockdownState.Initialize(animations: _animations, this, _ragdollController);
         }
 
         internal void Start()
         {
             InputManager.Instance.Move += OnMove;
             InputManager.Instance.JoystickReleaed += OnJoystickReleased;
+
+            Idle();
         }
 
 
@@ -60,21 +63,32 @@ namespace Characters.Player.FSM
                 EnterState(_idleState);
         }
 
+        public void Knockdown()
+        {
+            if (_currentState != _knockdownState)
+                EnterState(_knockdownState);
+        }
+
         public void TakeDamage(int damage, bool knockdown = false)
         {
-
+            var health = _health - damage;
+            _health = Mathf.Clamp(health, 0, _maxHealth);
+            if (knockdown)
+                Knockdown();
         }
 
 
 
         private void OnMove(Vector2 speedScale)
         {
-            Move(speedScale.x, speedScale.y);
+            if (_currentState != _knockdownState)
+                Move(speedScale.x, speedScale.y);
         }
 
         private void OnJoystickReleased()
         {
-            Idle();
+            if (_currentState == _runState)
+                Idle();
         }
 
         protected override void Update()
@@ -94,7 +108,7 @@ namespace Characters.Player.FSM
         {
             var position = transform.position;
             position.y = 0;
-            transform.position= position;
+            transform.position = position;
         }
 
 

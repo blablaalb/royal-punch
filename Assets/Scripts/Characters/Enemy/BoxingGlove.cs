@@ -10,6 +10,7 @@ namespace Characters.Enemy
     {
         private EnemyBrain _enemy;
         private PlayerBrain _player;
+        [SerializeField]
         private int _power;
 
         internal void OnTriggerEnter(Collider collider)

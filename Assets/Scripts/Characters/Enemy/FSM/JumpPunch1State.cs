@@ -15,7 +15,7 @@ namespace Characters.Enemy.FSM
         private EnemyBrain _context;
         private float _attackRange = 360f;
         [SerializeField]
-        private float _maxDistance = 9f;
+        private float _maxDistance = 19f;
         private PlayerBrain _player;
         [SerializeField]
         private int _damage;
@@ -72,9 +72,10 @@ namespace Characters.Enemy.FSM
             _fieldOfAttack.Hide();
             var pp = _player.transform.position;
             var ep = _context.transform.position;
-            if (Vector2.Distance(new Vector2(pp.x, pp.z), new Vector2(ep.x, ep.z)) <= _maxDistance)
+            var distance = Vector2.Distance(new Vector2(pp.x, pp.z), new Vector2(ep.x, ep.z));
+            if (distance <= _maxDistance)
             {
-                _player.TakeDamage(_damage);
+                _player.TakeDamage(_damage, true);
             }
         }
 

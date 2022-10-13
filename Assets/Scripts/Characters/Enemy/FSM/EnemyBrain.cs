@@ -15,6 +15,7 @@ namespace Characters.Enemy.FSM
         private PlayerBrain _player;
         private EnemyAnimations _animations;
         private FIeldOfAttack _fieldOfAttack;
+        private SmoothLookAt _lookAt;
         [SerializeField]
         private JumpPunch1State _jumpPunchState;
         [SerializeField]
@@ -29,10 +30,11 @@ namespace Characters.Enemy.FSM
 
         internal void Awake()
         {
-            _player=  FindObjectOfType<PlayerBrain>();
+            _player = FindObjectOfType<PlayerBrain>();
             _health = _maxHealth;
             _animations = GetComponent<EnemyAnimations>();
             _fieldOfAttack = FindObjectOfType<FIeldOfAttack>(true);
+            _lookAt = GetComponent<SmoothLookAt>();
             _jumpPunchState.Initialize(_animations, this, _fieldOfAttack, _player);
             _restState.Initialize(_animations, this);
             _idleState.Initialize(_animations, this);
@@ -41,6 +43,18 @@ namespace Characters.Enemy.FSM
         internal void Start()
         {
             Idle();
+        }
+
+        override protected void Update()
+        {
+            if (_currentState == _restState)
+            {
+                _lookAt.Target = null;
+            }
+            else
+            {
+                _lookAt.Target = _player.transform;
+            }
         }
 
 
@@ -67,5 +81,6 @@ namespace Characters.Enemy.FSM
             _health = health;
             HealthChanged?.Invoke(delta);
         }
+
     }
 }

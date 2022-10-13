@@ -8,9 +8,10 @@ namespace Characters.Player
     {
         private Animator _animator;
 
+
         internal void Awake()
         {
-            _animator = GetComponent<Animator>();
+            _animator = GetComponentInChildren<Animator>();
         }
 
         public void Run(Vector2 blend)
@@ -56,5 +57,6 @@ namespace Characters.Player
         {
             return _animator.IsPlaying("Armature|GGPunch", 1) || _animator.IsPlaying("Armature|GGPunch2", 1);
         }
+
     }
 }
