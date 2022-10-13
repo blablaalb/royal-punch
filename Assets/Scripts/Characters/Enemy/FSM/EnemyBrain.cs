@@ -27,6 +27,8 @@ namespace Characters.Enemy.FSM
         private IdleState _idleState;
         [SerializeField]
         private ClosePunchState _closePunchState;
+        [SerializeField]
+        private DanceState _danceState;
 
 
         public int Health => _health;
@@ -44,11 +46,24 @@ namespace Characters.Enemy.FSM
             _restState.Initialize(_animations, this);
             _idleState.Initialize(_animations, this, _player);
             _closePunchState.Initialize(_animations, this, _player);
+            _danceState.Initialize(_animations);
+
+            GameManager.Instance.PlayerLost += OnPlayerLost;
         }
 
         internal void Start()
         {
             Idle();
+        }
+
+        internal void OnDestroy()
+        {
+            try
+            {
+
+                GameManager.Instance.PlayerLost -= OnPlayerLost;
+            }
+            catch { }
         }
 
         override protected void Update()
@@ -80,6 +95,11 @@ namespace Characters.Enemy.FSM
             EnterState(_restState);
         }
 
+        public void Dance()
+        {
+            EnterState(_danceState);
+        }
+
         public void Idle()
         {
             EnterState(_idleState);
@@ -93,6 +113,11 @@ namespace Characters.Enemy.FSM
             _health = health;
             HealthChanged?.Invoke(delta);
             _animations.Punched();
+        }
+
+        private void OnPlayerLost()
+        {
+            Dance();
         }
 
 #if UNITY_EDITOR

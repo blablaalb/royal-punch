@@ -26,6 +26,10 @@ namespace Characters.Player.FSM
         private PunchAction _punchAction;
         [SerializeField]
         private float _punchDistance = 3.5f;
+        [SerializeField]
+        private DieState _dieState;
+
+        public bool Dead => _health <= 0f;
 
 
         internal void Awake()
@@ -38,6 +42,7 @@ namespace Characters.Player.FSM
             _runState.Initialize(animations: _animations, characterController: _characterController, context: this);
             _idleState.Initialize(animations: _animations, characterController: _characterController, context: this);
             _knockdownState.Initialize(animations: _animations, this, _ragdollController);
+            _dieState.Initialize(_animations, _characterController, this, _ragdollController);
         }
 
         internal void Start()
@@ -69,24 +74,37 @@ namespace Characters.Player.FSM
                 EnterState(_knockdownState);
         }
 
+        public void Die()
+        {
+            EnterState(_dieState);
+        }
+
+
         public void TakeDamage(int damage, bool knockdown = false)
         {
             var health = _health - damage;
             _health = Mathf.Clamp(health, 0, _maxHealth);
             if (knockdown)
                 Knockdown();
+
+            if (Dead)
+            {
+                Die();
+            }
         }
 
 
 
         private void OnMove(Vector2 speedScale)
         {
+            if (Dead) return;
             if (_currentState != _knockdownState)
                 Move(speedScale.x, speedScale.y);
         }
 
         private void OnJoystickReleased()
         {
+            if (Dead) return;
             if (_currentState == _runState)
                 Idle();
         }
@@ -94,6 +112,7 @@ namespace Characters.Player.FSM
         protected override void Update()
         {
             base.Update();
+            if (Dead) return;
 
             var distance = Vector3.Distance(_characterController.transform.position, Vector3.zero);
             if (distance <= _punchDistance)
@@ -110,6 +129,7 @@ namespace Characters.Player.FSM
             position.y = 0;
             transform.position = position;
         }
+
 
 
 

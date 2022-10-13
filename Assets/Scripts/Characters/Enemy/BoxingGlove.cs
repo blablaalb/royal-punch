@@ -13,11 +13,18 @@ namespace Characters.Enemy
         [SerializeField]
         private int _power;
 
+        internal void Awake()
+        {
+            _enemy = FindObjectOfType<EnemyBrain>();
+            _player = FindObjectOfType<PlayerBrain>();
+        }
+
         internal void OnTriggerEnter(Collider collider)
         {
             if (_enemy.CurrentState.StateName == "Close Punch")
             {
                 _player.TakeDamage(_power, true);
+                Debug.Log("Damage");
             }
         }
     }

@@ -28,7 +28,6 @@ namespace Characters.Enemy
             if (!_animator.IsPlaying(animation, 0))
             {
                 _animator.Play(animation, 0, 0f);
-                Debug.Log("punch");
             }
         }
 
@@ -50,12 +49,17 @@ namespace Characters.Enemy
         public void Punched()
         {
             _animator.SetLayerWeight(1, 1f);
-            _animator.Play("Punched",  1, 0f);
+            _animator.Play("Punched", 1, 0f);
         }
 
         public void Round()
         {
             _animator.CrossFade("Armature|Round", 0.1f);
+        }
+
+        public void Celebrate()
+        {
+            _animator.CrossFade("Armature|WinDance", 0.1f, 0, 0);
         }
 
         public void OnJumpPunch1Finished()

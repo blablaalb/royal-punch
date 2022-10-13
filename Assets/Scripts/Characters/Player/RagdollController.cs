@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using DG;
 using DG.Tweening;
+using Characters.Player.FSM;
 
 namespace Characters.Player
 {
@@ -18,6 +19,7 @@ namespace Characters.Player
         private Animator _ragdollAnimator;
         private CharacterController _characterController;
         private Action _callback;
+        private PlayerBrain _player;
 
 
         internal void Awake()
@@ -25,6 +27,7 @@ namespace Characters.Player
             _animator = GetComponentInChildren<Animator>();
             _ragdollAnimator = _ragdoll.GetComponent<Animator>();
             _characterController = GetComponent<CharacterController>();
+            _player = FindObjectOfType<PlayerBrain>();
         }
 
         internal void Update()
@@ -118,8 +121,8 @@ namespace Characters.Player
         private IEnumerator CountdownCoroutine()
         {
             yield return new WaitForSeconds(1.5f);
-
-            EnableModel();
+            if (!_player.Dead)
+                EnableModel();
         }
 
     }
